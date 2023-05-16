@@ -1,0 +1,149 @@
+{
+  "title": "UK GHG Emissions Factors",
+  "version": "2.2",
+  "settings": {
+    "pagenumber": 0,
+    "editable": true,
+    "fullscreenEnabled": false,
+    "parameters": {
+      "neodash_scope_scope": "Scope 3",
+      "neodash_scope_scope_display": "Scope 3",
+      "neodash_level_2_level_2": "Gaseous fuels",
+      "neodash_level_2_level_2_display": "Gaseous fuels",
+      "neodash_factor_ghg_unit": "kg CO2e of CO2",
+      "neodash_factor_ghg_unit_display": "kg CO2e of CO2",
+      "neodash_search_term": "Business travel- air",
+      "neodash_search_term_display": "Business travel- air"
+    },
+    "downloadImageEnabled": true,
+    "disableRowLimiting": true
+  },
+  "pages": [
+    {
+      "title": "Scope By Level 1 and GHG",
+      "reports": [
+        {
+          "title": "Scope Picker",
+          "query": "MATCH (n:`Scope`) \nWHERE toLower(toString(n.`Scope`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`Scope` as value,  n.`Scope` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 3,
+          "height": 1,
+          "x": 0,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "Scope",
+            "propertyType": "Scope",
+            "propertyTypeDisplay": "Scope",
+            "parameterName": "neodash_scope_scope",
+            "defaultValue": "Scope 3",
+            "helperText": "select scope"
+          }
+        },
+        {
+          "title": "Emissions Factors Tree",
+          "query": "MATCH p =  (s:Scope {Scope: $neodash_scope_scope})-[*]->(n:Level_1 {Level_1:$neodash_search_term})-[*]->(f:Factor)\nRETURN p, toFloat(f.GHG_Conversion_Factor_2022) AS ghg_ef\n\n",
+          "width": 8,
+          "height": 3,
+          "x": 3,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "Scope": "Scope",
+            "Level_1": "Level_1",
+            "Level_2": "Level_2",
+            "Level_3": "Level_3",
+            "Level_4": "(label)",
+            "Factor": "GHG_Unit"
+          },
+          "settings": {}
+        },
+        {
+          "title": "Level 1 Search Term",
+          "query": "MATCH (s:Scope {Scope:$neodash_scope_scope })-[*]->(n:Level_1) \nWHERE toLower(toString(n.Level_1)) CONTAINS toLower($input) \nRETURN DISTINCT n.Level_1 as value,  n.Level_1 as display ORDER BY size(toString(value)) ASC LIMIT 50",
+          "width": 3,
+          "height": 1,
+          "x": 0,
+          "y": 1,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Custom Query",
+            "clearParameterOnFieldClear": true,
+            "manualPropertyNameSpecification": false,
+            "overridePropertyDisplayName": false,
+            "helperText": "enter search term",
+            "suggestionLimit": 50,
+            "entityType": "search_term",
+            "parameterName": "neodash_search_term",
+            "defaultValue": "Business travel- air"
+          }
+        },
+        {
+          "title": "Emissions Factors Tree Map",
+          "query": "MATCH p =  (s:Scope {Scope: $neodash_scope_scope})-[*]->(n:Level_1 {Level_1:$neodash_search_term})-[*]->(f:Factor)\nWHERE f.GHG_Unit = $neodash_factor_ghg_unit\nRETURN [f.Level_2, f.Level_3, f.Level_4, f.Description, f.GHG_Unit+' per '+f.UOM] as path, \ntoFloat(f.GHG_Conversion_Factor_2022) AS ghg_ef, f.GHG_Unit AS ghg_Unit, f.UOM AS uom\n",
+          "width": 11,
+          "height": 5,
+          "x": 0,
+          "y": 3,
+          "type": "treeMap",
+          "selection": {
+            "index": "path",
+            "value": "ghg_ef",
+            "key": "(none)"
+          },
+          "settings": {
+            "borderWidth": 1,
+            "interactive": true,
+            "colors": "accent",
+            "columnWidths": "[3,1,1,1]",
+            "showLabels": false
+          }
+        },
+        {
+          "title": "GHG",
+          "query": "MATCH (n:`Factor`) \nWHERE toLower(toString(n.`GHG_Unit`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`GHG_Unit` as value,  n.`GHG_Unit` as display ORDER BY size(toString(value)) ASC LIMIT 20",
+          "width": 3,
+          "height": 1,
+          "x": 0,
+          "y": 2,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "Factor",
+            "propertyType": "GHG_Unit",
+            "propertyTypeDisplay": "GHG_Unit",
+            "parameterName": "neodash_factor_ghg_unit",
+            "helperText": "select ghg",
+            "suggestionLimit": 20,
+            "defaultValue": "kg CO2e of CO2"
+          }
+        },
+        {
+          "title": "Emissions Factor Table",
+          "query": "MATCH p =  (s:Scope {Scope: $neodash_scope_scope})-[*]->(n:Level_1 {Level_1:$neodash_search_term})-[*]->(f:Factor)\nWHERE f.GHG_Unit = $neodash_factor_ghg_unit\nRETURN [f.Level_1,f.Level_2, f.Level_3, f.Level_4] as path, \ntoFloat(f.GHG_Conversion_Factor_2022) AS ghg_ef, f.GHG_Unit AS ghg_Unit, f.UOM AS uom\n",
+          "width": 11,
+          "height": 3,
+          "x": 0,
+          "y": 8,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "borderWidth": 1,
+            "interactive": true,
+            "colors": "accent",
+            "columnWidths": "[3,1,1,1]",
+            "showLabels": false
+          }
+        }
+      ]
+    }
+  ],
+  "parameters": {},
+  "extensions": {
+    "advanced-charts": true,
+    "styling": true
+  }
+}

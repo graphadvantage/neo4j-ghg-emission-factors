@@ -1,1 +1,21 @@
 # neo4j-ghg-emission-factors
+
+Graph and NeoDash dashboard of GHG emission factors compiled by the
+
+[UK government](https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022) UK government
+
+Install:
+
+Create a Neo4j version 5 or greater database
+
+Copy the data/ghg-conversion-factors-2022-flat-format.csv to your Neo4j import folder
+
+Run the load queries in `load-ghg-efs.cyp`
+
+Launch NeoDash from the Neo4j Desktop Apps sidebar (you may need to install it from the App Gallery)
+
+Import `dashboard.json` into NeoDash
+
+You should be able to get something that looks like this:
+
+![NeoDash](image.png)image.png
