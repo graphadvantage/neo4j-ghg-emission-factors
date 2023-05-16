@@ -1,10 +1,10 @@
 # neo4j-ghg-emission-factors
 
-Graph and NeoDash dashboard of GHG emission factors compiled by the
+Neo4j graph database and NeoDash dashboard of GHG emission factors for Scope 1,2,3 compliance reporting compiled by the [UK government](https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022)
 
-[UK government](https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022) UK government
+Contains 8037 individual factors organized in directed hierarchical graphs for each Scope.
 
-Install:
+### Install:
 
 Create a Neo4j version 5 or greater database
 
@@ -16,6 +16,6 @@ Launch NeoDash from the Neo4j Desktop Apps sidebar (you may need to install it f
 
 Import `dashboard.json` into NeoDash
 
-You should be able to get something that looks like this:
+You'll get something that looks like this:
 
 ![NeoDash](image.png)image.png
