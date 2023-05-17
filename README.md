@@ -6,7 +6,7 @@ Contains 8037 individual factors organized in directed hierarchical graphs for e
 
 ### Install:
 
-Create a Neo4j version 5 or greater database
+Create a Neo4j version 5 or greater database with APOC utilities plugin installed
 
 Copy the data/ghg-conversion-factors-2022-flat-format.csv to your Neo4j import folder
 
